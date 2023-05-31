@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Beer = mongoose.model("Beer", {
-  name: String,
+  name: { type: String, required: true },
   tagline: String,
   first_brewed: String,
   description: String,

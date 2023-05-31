@@ -17,6 +17,7 @@ const beerRoutes = require("./routes/beer");
 const app = express();
 app.use(cors());
 app.use(express.json());
+app.use(beerRoutes);
 
 // Database
 mongoose.connect(process.env.DATABASE_URL);
@@ -25,6 +26,7 @@ mongoose.connection.on("connected", () => {
 });
 
 app.post("/generate", isAuthenticated, async (req, res) => {
+  // TODO: Refacto process (limite duplication)
   try {
     const response = await axios.get(
       `${process.env.ENDPOINT_PUNKAPI}beers?page=1&per_page=2`
@@ -62,7 +64,7 @@ app.get("/", (req, res) => {
 });
 
 app.all("*", (req, res) => {
-  console.log("oui");
+  console.log("route all *");
   res.status(404).json({ message: "Page not found" });
 });
 
