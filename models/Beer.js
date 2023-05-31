@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 const Beer = mongoose.model("Beer", {
   name: String,
   tagline: String,
-  first_brewed: Date,
+  first_brewed: String,
   description: String,
   image_url: String,
 
