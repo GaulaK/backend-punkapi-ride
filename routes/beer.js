@@ -35,7 +35,6 @@ router.get("/getOne", async (req, res) => {
 });
 
 router.post("/createOne", async (req, res) => {
-  // TODO: refacto ? initialize all missing fields with null value ?
   try {
     if (req.body?.name) {
       const newBeer = new Beer(req.body);
@@ -48,32 +47,33 @@ router.post("/createOne", async (req, res) => {
       newBeer.save();
       res.json(newBeer);
     } else {
-      res.status(400).json({ error: `Invalid format sent` });
+      res.status(400).json({ error: `Beer need a name to be created` });
     }
   } catch (error) {
     console.log("Error during POST - createOne - ", error);
-    res.status(400).json("Error during get one element by id");
+    res.status(500).json("Error during get one element by id");
   }
 });
 
-router.put("/updateOne", async (req, res) => {
+router.patch("/updateOne", async (req, res) => {
   try {
-    if (req.body?.id) {
+    if (req.body?.id && req.body?.update) {
       const beerToModify = await Beer.findById(req.body.id);
       if (!beerToModify) {
-        return res.status(400).json({ error: `Id not found` });
+        return res.status(404).json({ error: `No beer found with this ID` });
       }
-      // TODO: To finish
+      const beermodified = await Beer.findByIdAndUpdate(
+        req.body.id,
+        req.body.update
+      );
 
-      //   Force update in change values in the ingredients array
-      beerToModify.markModified("ingredients");
-      beerToModify.save();
+      res.json(beermodified);
     } else {
       res.status(400).json({ error: `Invalid format sent` });
     }
   } catch (error) {
     console.log("Error during DELETE - updateOne - ", error);
-    res.status(400).json("Error during updating one element");
+    res.status(500).json("Error during updating one element");
   }
 });
 

@@ -12,7 +12,7 @@ const Beer = mongoose.model("Beer", {
   srm: Number,
   ph: Number,
 
-  ingredients: Map,
+  ingredients: { type: Object, default: {} },
 });
 
 module.exports = Beer;

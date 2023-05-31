@@ -33,7 +33,6 @@ app.post("/generate", isAuthenticated, async (req, res) => {
     );
     console.log("Request done");
     response.data.forEach(async (beer) => {
-      // console.log(beer);
       const newBeer = new Beer({
         name: beer.name,
         tagline: beer.tagline,
@@ -60,14 +59,16 @@ app.post("/generate", isAuthenticated, async (req, res) => {
 });
 
 app.get("/", (req, res) => {
-  res.json({ message: "Default Route works" });
+  res.json({
+    message:
+      "CRUM API about beers - developped by @GaulaK on GitHub - based on PUNK API",
+  });
 });
 
 app.all("*", (req, res) => {
-  console.log("route all *");
-  res.status(404).json({ message: "Page not found" });
+  res.status(404).json({ message: "Route not found" });
 });
 
-app.listen(process.env.PORT || 3000, () => {
+app.listen(process.env.PORT || 4000, () => {
   console.log("Punk API is available !");
 });
