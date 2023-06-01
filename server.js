@@ -5,6 +5,7 @@ const express = require("express");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
+// Middlewares
 const isAuthenticated = require("./middlewares/isAuthenticated");
 
 // Models
@@ -26,33 +27,35 @@ mongoose.connection.on("connected", () => {
 });
 
 app.post("/generate", isAuthenticated, async (req, res) => {
-  // TODO: Refacto process (limite duplication)
   try {
     const response = await axios.get(
-      `${process.env.ENDPOINT_PUNKAPI}beers?page=1&per_page=2`
+      `${process.env.ENDPOINT_PUNKAPI}beers?page=1&per_page=80`
     );
-    console.log("Request done");
+    const beers = response.data;
+
     response.data.forEach(async (beer) => {
-      const newBeer = new Beer({
-        name: beer.name,
-        tagline: beer.tagline,
-        first_brewed: beer.first_brewed,
-        description: beer.description,
-        image_url: beer.image_url,
+      const beerAlreadyExists = await Beer.exists({ name: beer.name });
+      if (beerAlreadyExists) {
+      } else {
+        const newBeer = new Beer({
+          name: beer.name,
+          tagline: beer.tagline,
+          first_brewed: beer.first_brewed,
+          description: beer.description,
+          image_url: beer.image_url,
 
-        abv: beer.abv,
-        ibu: beer.ibu,
-        ebc: beer.ebc,
-        srm: beer.srm,
-        ph: beer.ph,
+          abv: beer.abv,
+          ibu: beer.ibu,
+          ebc: beer.ebc,
+          srm: beer.srm,
+          ph: beer.ph,
 
-        ingredients: beer.ingredients,
-      });
-
-      console.log(newBeer);
-      await newBeer.save();
+          ingredients: beer.ingredients,
+        });
+        await newBeer.save();
+      }
     });
-    res.json("ok");
+    res.json({ message: "Data Generated" });
   } catch (error) {
     res.status(400).json(error.message);
   }
