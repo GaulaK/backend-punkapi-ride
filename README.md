@@ -18,6 +18,8 @@ If the server crashes, you can save to reload the server. Don't forget to add th
 
 `/generate`
 
+Generate 80 default beers from [Punk API](https://punkapi.com/). ⚠️ This route need to setup a Bearer Token Authentification for working. In .env file, add a variable `TOKEN_GENERATE_DATA` with the value of the token you want.
+
 **Method** : POST
 
 ## getAll
